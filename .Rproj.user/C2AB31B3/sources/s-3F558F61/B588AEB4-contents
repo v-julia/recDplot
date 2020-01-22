@@ -1,0 +1,239 @@
+---
+title: "RecombinationLeishmania"
+author: "Yulia Vakulenko"
+date: '20 декабря 2019 г '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Analysis of recombination in LRV2
+
+
+```{r}
+library(recDplot)
+library("spider")
+library("ape")
+library("seqinr")
+library("gridExtra")
+library(grid)
+library(ggplot2)
+library(sjstats)
+library(gplots)
+library(colorRamps)
+```
+
+## Recombination plots for LRV2 full genomes.
+
+В выравнивании 6 полногеномных последовательностей LRV2: 
+
+  - KF256264_MHOM-ET-2011-LDS303_L-aethiopica_ETH_2011
+  - KF256265_MHOM-ET-2011-LDS327_L-aethiopica_ETH_2011
+  - MN418974_Lmj-Uzb1_L-major_UZB_2002
+  - MN418975_Lmj-Uzb2_L-major_UZB_2002
+  - NC_002064_L-infantum
+  - U32108_L-infantum
+
+RDP4 рекомбинации в датасете не нашел.
+
+```{r}
+homedir = "D:\\GoogleDrive\\LeishmaniaViruses\\LRV2"
+figdir = "D:\\GoogleDrive\\LeishmaniaViruses\\rec_fig"
+
+#genotype / prefix of input filename
+gt="LRV2_full_aln_nogap"
+
+#alignment for genotype
+alignment = read.dna(paste(homedir,paste(gt,"fasta",sep="."),sep="\\"), format="fasta")
+```
+
+Так выглядит контрольный график соотношения дистанций в четных и нечетных позициях:
+
+```{r pressure, echo=FALSE}
+contr = plot_control(alignment)
+c_plot = contr[[1]] + ggtitle(paste(gt,"control",sep=" ")) + stat_bin2d(binwidth = 0.005)
+c_plot 
+```
+Построим матрицу со значениями среднеквадратичных ошибок (RMSE) линейных регрессий в графиках соотношения попарных дистанций в различных парах участков.
+
+```{r pressure, echo=FALSE}
+rmse_df = plot_rmse(alignment, 25, 400, "pdist", "pairwise")
+heatmap.2(as.matrix(rmse_df[nrow(rmse_df):1,]),Rowv = FALSE, Colv = "Rowv", dendrogram = 'none',col=matlab.like, main="LRV2",tracecol=NA)
+```
+Видим, что есть несколько участков, где значения RMSE высоки:
+ - 550-1200  против других участков.
+ - 2150-2800 против остальных. Самые большие значения в парах окон:
+      + 550-1200 и 2150-2800
+      + 2150-2500 и 2600-3000
+      + 2150-2800 и 4000-4600
+ - 2600-3000 против остальных. Высокие значения в парах 2600-3000 и 4000-4600
+
+Проверим эти участки и посмотрим, какие пары дают сильно отклоняющиеся от линейной зависимости.
+
+## 550-1200 vs 2150-2800
+```{r}
+#start and end positions of fragments of interest
+st1 = 550
+e1 = 1200
+st2 = 2150
+e2 = 2800
+
+#list with pairwise distance comparison plot, distance matrices for regions st1-e1 and st2-e2
+l =  plot_dist_test(alignment, st1, e1, st2, e2)
+al_plot = l[[1]]+ggtitle(gt)
+al_plot# + geom_smooth(method = 'lm', formula=y~x)
+```
+```{r}
+#distance matrices for two regions
+alDistM1 = as.matrix(l[[2]])
+alDistM2 = as.matrix(l[[3]])
+
+rec_names = find_recomb_names(alDistM1,0.1, 0.2, alDistM2 ,.001, 0.05)
+rec_names
+```
+## 2150-2500 и 2600-3000
+
+```{r}
+#start and end positions of fragments of interest
+st1 = 2150
+e1 = 2500
+st2 = 2600
+e2 = 3000
+
+#list with pairwise distance comparison plot, distance matrices for regions st1-e1 and st2-e2
+l =  plot_dist_test(alignment, st1, e1, st2, e2)
+al_plot = l[[1]]+ggtitle(gt)
+al_plot# + geom_smooth(method = 'lm', formula=y~x)
+```
+```{r}
+#distance matrices for two regions
+alDistM1 = as.matrix(l[[2]])
+alDistM2 = as.matrix(l[[3]])
+
+rec_names = find_recomb_names(alDistM1,0.001, 0.1, alDistM2 ,.05, 0.1)
+rec_names
+```
+## 2150-2800 и 4000-4600
+
+```{r}
+#start and end positions of fragments of interest
+st1 = 2150
+e1 = 2600
+st2 = 4000
+e2 = 4600
+
+#list with pairwise distance comparison plot, distance matrices for regions st1-e1 and st2-e2
+l =  plot_dist_test(alignment, st1, e1, st2, e2)
+al_plot = l[[1]]+ggtitle(gt)
+al_plot# + geom_smooth(method = 'lm', formula=y~x)
+```
+На этом графике мне не так очевидно, есть ли рекомбинация.
+
+```{r}
+#distance matrices for two regions
+alDistM1 = as.matrix(l[[2]])
+alDistM2 = as.matrix(l[[3]])
+
+rec_names = find_recomb_names(alDistM1,0.0001, 0.1, alDistM2 ,.02, 0.1)
+rec_names
+```
+```{r}
+#distance matrices for two regions
+rec_names = find_recomb_names(alDistM1,0.2, 0.25, alDistM2 ,0.2, 0.3)
+rec_names
+```
+
+
+
+## 2600-3000 и 4000-4600
+
+```{r}
+#start and end positions of fragments of interest
+st1 = 2600
+e1 = 3000
+st2 = 4000
+e2 = 4600
+
+#list with pairwise distance comparison plot, distance matrices for regions st1-e1 and st2-e2
+l =  plot_dist_test(alignment, st1, e1, st2, e2)
+al_plot = l[[1]]+ggtitle(gt)
+al_plot + geom_smooth(method = 'lm', formula=y~x)
+```
+```{r}
+#distance matrices for two regions
+alDistM1 = as.matrix(l[[2]])
+alDistM2 = as.matrix(l[[3]])
+
+rec_names = find_recomb_names(alDistM1,0.1, 0.2, alDistM2, 0.001, 0.1)
+rec_names
+```
+```{r}
+rec_names = find_recomb_names(alDistM1,0.2, 0.3, alDistM2, 0.2, 0.3)
+rec_names
+```
+
+
+## Recombination plots for LRV1 full genomes.
+
+
+В выравнивании 36 полногеномных последовательностей LRV2: 
+
+   - KU724433_Lg60691_L-guyanensis_BRA_2011
+   - KU724434_Lg601047_L-guyanensis_BRA_2011
+   - KX686068_M6200_L-guyanensis_BRA_2015
+   - KY750607_Lg2001_L-guyanensis_BRA_2011
+   - KY750608_LgLF94_L-guyanensis_French-Guiana_2013
+   - KY750609_LgXJ93_2_L-guyanensis_French-Guiana_2013
+   - KY750610_LbrYA70_L-braziliensis_French-Guiana_2013
+   - KY750611_Lg2014_L-guyanensis_French-Guiana_2013
+   - KY750612_Lg2008_L-guyanensis_French-Guiana_2012
+   - KY750613_Lg2015_L-guyanensis_French-Guiana_2012
+   - KY750614_Lg2028_1_L-guyanensis_French-Guiana_2012
+   - KY750615_Lg2028_2_L-guyanensis_French-Guiana_2012
+   - KY750616_Lg2028_3_L-guyanensis_French-Guiana_2012
+   - KY750617_LgLF98_L-guyanensis_French-Guiana_2013
+   - KY750618_LgLL28_L-guyanensis_French-Guiana_2012
+   - KY750619_LgMC71_L-guyanensis_French-Guiana_2012
+   - KY750620_LgMJ25_L-guyanensis_French-Guiana_2012
+   - KY750621_LgPD46_L-guyanensis_French-Guiana_2014
+   - KY750622_LgVL91_L-guyanensis_French-Guiana_2012
+   - KY750623_LgVW21_L-guyanensis_French-Guiana_2013
+   - KY750624_LgWF69_1_L-guyanensis_French-Guiana_2012
+   - KY750625_LgWF69_2_L-guyanensis_French-Guiana_2012
+   - KY750626_LgXJ93_1_L-guyanensis_French-Guiana_2013
+   - KY750627_LgXK73_L-guyanensis_French-Guiana_2013
+   - KY750628_LgYE48_L-guyanensis_French-Guiana_2013
+   - KY750629_LgYR07_L-guyanensis_French-Guiana_2014
+   - KY750630_LgYZ58_L-guyanensis_French-Guiana_2012
+   - KX808483_LRV1-LbrLEM2700_L-braziliensis
+   - KX808484_LRV1-LbrLEM2780(a)_L-braziliensis
+   - KX808485_LRV1-LbrLEM2780(b)_L-braziliensis
+   - KX808486_LRV1-LbrLEM3874
+   - KX808487_LRV1-LgyM4147_L-guyanensis
+   - M92355
+   - NC_002063
+   - NC_003601
+   - U01899
+
+RDP4 рекомбинации в датасете не нашел.
+
+```{r}
+homedir = "D:\\GoogleDrive\\LeishmaniaViruses\\LRV2"
+figdir = "D:\\GoogleDrive\\LeishmaniaViruses\\rec_fig"
+
+#genotype / prefix of input filename
+gt="LRV2_full_aln_nogap"
+
+#alignment for genotype
+alignment = read.dna(paste(homedir,paste(gt,"fasta",sep="."),sep="\\"), format="fasta")
+```
+
+Так выглядит контрольный график соотношения дистанций в четных и нечетных позициях:
+
+```{r pressure, echo=FALSE}
+contr = plot_control(alignment)
+c_plot = contr[[1]] + ggtitle(paste(gt,"control",sep=" ")) + stat_bin2d(binwidth = 0.005)
+c_plot 
+```
