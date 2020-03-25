@@ -218,7 +218,7 @@ plot_rmse = function(dna_object, step,window, method, modification=NA){
   length_aln = length(dna_object[1,]) #length of alignment
   num_seq = length(dna_object[,1]) # number of sequences in alignment
 
-  starts = seq(from=0, to =length_aln-window, by = step) # start positions of genomic regions
+  starts = seq(from=0, to=length_aln-window, by = step) # start positions of genomic regions
   starts[1]=1
   ends = seq(from=window, to = length_aln, by = step) # end positions of genomic regions
   if (length_aln%%step>step){ends=c(ends,length_aln)}
@@ -253,14 +253,21 @@ plot_rmse = function(dna_object, step,window, method, modification=NA){
     }
 
   }
+  n = nrow(df_intervals)
   print(length(dist_matrices))
-  for (i in 1:nrow(df_intervals)){
-    for (j in 1:nrow(df_intervals)){
+  for (i in 1:n){
+    for (j in 1:(n - i + 1)){
+      #for (j in 1:(n)){
+      #print(paste(toString(i), toString(j), sep=","))
       #fits pairwise distance comparison plots linear model, calculates rmse
-      rmse_df[i,j] =rmse(lm(dist_matrices[[j]]~dist_matrices[[i]]))
+      rmse_i_j = (rmse(lm(dist_matrices[[j]]~dist_matrices[[i]])) + rmse(lm(dist_matrices[[i]]~dist_matrices[[j]]))) /2.0
+      #rmse_i_j = rmse(lm(dist_matrices[[j]]~dist_matrices[[i]]))
+      rmse_df[i,j] = rmse_i_j
+      rmse_df[n-j+1,n-i+1] = rmse_i_j
     }
   }
-  colnames(rmse_df)
+  #print(rmse_df)
+  #colnames(rmse_df)
   return(rmse_df)
 
 }
