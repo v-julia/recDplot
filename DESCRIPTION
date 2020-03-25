@@ -1,0 +1,26 @@
+Package: recDplot
+Type: Package
+Title: Visualisation of recombination events in ucleotide sequences
+        using pairwise distance plots
+Version: 0.1.0
+Author: vakulenko Y.A.
+Maintainer: The package maintainer <vjulia94@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+RemoteType: github
+RemoteHost: api.github.com
+RemoteRepo: recDplot
+RemoteUsername: v-julia
+RemoteRef: master
+RemoteSha: 2d93be02d8cec22bf064b9fc8a4bb6e28c7134f1
+GithubRepo: recDplot
+GithubUsername: v-julia
+GithubRef: master
+GithubSHA1: 2d93be02d8cec22bf064b9fc8a4bb6e28c7134f1
+NeedsCompilation: no
+Packaged: 2020-03-25 09:05:23 UTC; User
+Built: R 3.6.2; ; 2020-03-25 09:05:23 UTC; windows
