@@ -232,9 +232,12 @@ plot_rmse = function(dna_object, step,window, method, modification=NA){
   colnames(rmse_df)=starts
   rownames(rmse_df)=starts
 
+
+  cat("Total number of intervals", nrow(df_intervals))
   #list of distance matrices for each pair of genomic regions
   dist_matrices = list()
   for (i in 1:nrow(df_intervals)){
+    cat("\r", "Calculating distances in interval", i)
     slice = dna_object[1:num_seq, seq(from = df_intervals[i,"starts"], to = df_intervals[i,"ends"], by=1)]
 
     #dist_matrices[[i]] = dist.dna(slice,  as.matrix = TRUE,  model = "JC69")
@@ -256,14 +259,15 @@ plot_rmse = function(dna_object, step,window, method, modification=NA){
   n = nrow(df_intervals)
   print(length(dist_matrices))
   for (i in 1:n){
-    for (j in 1:(n - i + 1)){
+    cat("\r", "Calculating rmse in row", i)
+    for (j in i:n){
       #for (j in 1:(n)){
       #print(paste(toString(i), toString(j), sep=","))
       #fits pairwise distance comparison plots linear model, calculates rmse
       rmse_i_j = (rmse(lm(dist_matrices[[j]]~dist_matrices[[i]])) + rmse(lm(dist_matrices[[i]]~dist_matrices[[j]]))) /2.0
       #rmse_i_j = rmse(lm(dist_matrices[[j]]~dist_matrices[[i]]))
       rmse_df[i,j] = rmse_i_j
-      rmse_df[n-j+1,n-i+1] = rmse_i_j
+      rmse_df[j,i] = rmse_i_j
     }
   }
   #print(rmse_df)
