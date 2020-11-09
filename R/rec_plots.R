@@ -1,22 +1,12 @@
-library("spider")
-library("ape")
-library("seqinr")
-library("gridExtra")
-#library(hexbin)
-library(grid)
-library(ggplot2)
-library(sjstats)
-library(gplots)
-library(colorRamps)
-
-
-
-# Function plots pairwise nucleotide distance comparison plot.
-# Each dot corresponds to a pair of nucleotide distances between
-# the same pair of genomes in two genomic regions - odd sites and even sites of genome (see axis).
-# Returns list with ggplot, matrices of distances between pairs of seqences calculated for
-# odd and even sites
-
+#' Plot control Pairwise Distance Concordance Plot
+#' Function plots pairwise nucleotide distance comparison plot.
+#' Each dot corresponds to a pair of nucleotide distances between
+#' the same pair of genomes in two genomic regions - odd sites and even sites of genome (see axis).
+#' Returns list with ggplot, matrices of distances between pairs of seqences calculated for
+#' odd and even sites
+#' @param dna_object
+#' @return list with ggplot object with control PDC plot, distance matrices for region 1 and 2
+#' @export
 plot_control = function(dna_object){
 
   # subalignments for odd and even sites
@@ -41,12 +31,12 @@ plot_control = function(dna_object){
 
 }
 
-# Function plots pairwise nucleotide distance comparison plot.
-# Each dot corresponds to a pair of nucleotide distances between
-# the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
-# Returns list with ggplot, matrices of distances between pairs of seqences calculated for
-# st1-e1 and st2-e2 regions
-
+#' Function plots pairwise nucleotide distance comparison plot.
+#' Each dot corresponds to a pair of nucleotide distances between
+#' the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
+#' Returns list with ggplot, matrices of distances between pairs of seqences calculated for
+#' st1-e1 and st2-e2 regions
+#' @export
 plot_dist_test = function(dna_object, st1,e1,st2,e2){
 
   # subalignments for st1-e1 and st2-e2 regions
@@ -77,11 +67,12 @@ plot_dist_test = function(dna_object, st1,e1,st2,e2){
 
 }
 
-# Prints names of sequences pairs which pairwise nucleotide distances lay between
-# val11-val12 in genomic region 1 and val21-val22 in genomic region 2/
-# distM1 - distance matrix built for region 1
-# distM2 - distance matrix built for region 2
-# Prints strings "name1\tname2\tdistance_in_region1\tdistance_in_region2"
+#' Prints names of sequences pairs which pairwise nucleotide distances lay between
+#' val11-val12 in genomic region 1 and val21-val22 in genomic region 2/
+#' distM1 - distance matrix built for region 1
+#' distM2 - distance matrix built for region 2
+#' Prints strings "name1   name2   distance_in_region1   distance_in_region2"
+
 find_recomb_names <- function(distM1, val11, val12, distM2, val21, val22){
 
   #positions of matrix for region 1 with values between val11 and val12
@@ -123,22 +114,22 @@ find_recomb_names <- function(distM1, val11, val12, distM2, val21, val22){
 
 }
 
-#returns positions in matrix which values are between val1 and val2
+#'returns positions in matrix which values are between val1 and val2
 find_dist_slice<-function(distM, val1, val2){
   b = which((distM>=val1)&(distM<=val2))
   #print(which((distM>val1)&(distM<val2),arr.ind=T))
   return(b)
 }
 
-#plots pairwise distance comparison plots for different pairs of regions
-#dna_object - list of DNA sequences (class DNAbin)
-#step - step for dna regions/ window for regions is equal to step
-#method - method of calculation distances ("pdist", "JC", "Kimura", "TN")
-#fig_dir - path to directory for saving figures
-#name_fig - prefix for figure name
+#'plots pairwise distance comparison plots for different pairs of regions
+#'dna_object - list of DNA sequences (class DNAbin)
+#'step - step for dna regions/ window for regions is equal to step
+#'method - method of calculation distances ("pdist", "JC", "Kimura", "TN")
+#'fig_dir - path to directory for saving figures
+#'name_fig - prefix for figure name
 
-#created directory fig_dir/step and saves pairwise distance comparison plot there
-
+#'created directory fig_dir/step and saves pairwise distance comparison plot there
+#' @export
 plot_dist = function(dna_object, step, method, fig_dir, name_fig){
 
   length_aln = length(dna_object[1,]) #length of alignment
@@ -204,15 +195,15 @@ plot_dist = function(dna_object, step, method, fig_dir, name_fig){
   }
 }
 
-# plots heatmap with RMSE in pairwise distance comparison plot for each pair of genomic regions
-# dna_object -  list of DNA sequences (class DNAbin)
-# step
-# window - length of genomic regions to compare
-# method - method of calculation distances ("pdist", "JC", "Kimura", "TN")
-# modification - pairwise deletion of positions with gaps or not
+#' plots heatmap with RMSE in pairwise distance comparison plot for each pair of genomic regions
+#' dna_object -  list of DNA sequences (class DNAbin)
+#' step
+#' window - length of genomic regions to compare
+#' method - method of calculation distances ("pdist", "JC", "Kimura", "TN")
+#' modification - pairwise deletion of positions with gaps or not
 
-#returns matrix with rmse values for each pair f=of genomic regions
-
+#'returns matrix with rmse values for each pair f=of genomic regions
+#' @export
 plot_rmse = function(dna_object, step,window, method, modification=NA){
 
   length_aln = length(dna_object[1,]) #length of alignment
