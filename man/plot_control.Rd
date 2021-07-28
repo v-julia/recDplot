@@ -2,12 +2,7 @@
 % Please edit documentation in R/rec_plots.R
 \name{plot_control}
 \alias{plot_control}
-\title{Plot control Pairwise Distance Concordance Plot
-Function plots pairwise nucleotide distance comparison plot.
-Each dot corresponds to a pair of nucleotide distances between
-the same pair of genomes in two genomic regions - odd sites and even sites of genome (see axis).
-Returns list with ggplot, matrices of distances between pairs of seqences calculated for
-odd and even sites}
+\title{Plot control Pairwise Distance Concordance Plot}
 \usage{
 plot_control(dna_object)
 }
@@ -15,7 +10,6 @@ plot_control(dna_object)
 list with ggplot object with control PDC plot, distance matrices for region 1 and 2
 }
 \description{
-Plot control Pairwise Distance Concordance Plot
 Function plots pairwise nucleotide distance comparison plot.
 Each dot corresponds to a pair of nucleotide distances between
 the same pair of genomes in two genomic regions - odd sites and even sites of genome (see axis).
