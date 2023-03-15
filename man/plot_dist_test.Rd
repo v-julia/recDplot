@@ -2,16 +2,18 @@
 % Please edit documentation in R/rec_plots.R
 \name{plot_dist_test}
 \alias{plot_dist_test}
-\title{Function plots pairwise nucleotide distance comparison plot.
-Each dot corresponds to a pair of nucleotide distances between
-the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
-Returns list with ggplot, matrices of distances between pairs of seqences calculated for
-st1-e1 and st2-e2 regions}
+\title{Function plots pairwise nucleotide distance comparison plot.}
 \usage{
+plot_dist_test(dna_object, st1, e1, st2, e2)
+
 plot_dist_test(dna_object, st1, e1, st2, e2)
 }
 \description{
-Function plots pairwise nucleotide distance comparison plot.
+Each dot corresponds to a pair of nucleotide distances between
+the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
+Returns list with ggplot, matrices of distances between pairs of seqences calculated for
+st1-e1 and st2-e2 regions
+
 Each dot corresponds to a pair of nucleotide distances between
 the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
 Returns list with ggplot, matrices of distances between pairs of seqences calculated for

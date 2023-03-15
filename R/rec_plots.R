@@ -1,4 +1,5 @@
 #' Plot control Pairwise Distance Concordance Plot
+#'
 #' Function plots pairwise nucleotide distance comparison plot.
 #' Each dot corresponds to a pair of nucleotide distances between
 #' the same pair of genomes in two genomic regions - odd sites and even sites of genome (see axis).
@@ -18,11 +19,11 @@ plot_control = function(dna_object){
   dna_sl_dist2 <-dist.gene(al_even, method = "percentage",  pairwise.deletion = TRUE)
 
   # adding random noise to distances matrices' values
-  dist1= as.vector(dna_sl_dist1) + rnorm(length(dna_sl_dist1),mean = 0,sd= 0.001)
+  dist1= as.vector(dna_sl_dist1) + rnorm(length(dna_sl_dist1),mean = 0,sd= 0.0001)
   dist2= as.vector(dna_sl_dist2) + rnorm(length(dna_sl_dist2),mean = 0,sd= 0.0001)
 
   # pairwise nucleotide distance comparison plot
-  dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+stat_bin2d(binwidth = 0.001)+
+  dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+ stat_bin2d()+#stat_bin2d(binwidth = 0.003)+
     scale_fill_gradientn(colours=c("blue","red"))+ theme(legend.justification=c(1,0), legend.position=c(1,0))+
     xlab("odd sites")+ylab("even sites")
   #+  geom_smooth(method='lm',formula=y~x)
@@ -32,6 +33,7 @@ plot_control = function(dna_object){
 }
 
 #' Function plots pairwise nucleotide distance comparison plot.
+#'
 #' Each dot corresponds to a pair of nucleotide distances between
 #' the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
 #' Returns list with ggplot, matrices of distances between pairs of seqences calculated for
@@ -50,15 +52,15 @@ plot_dist_test = function(dna_object, st1,e1,st2,e2){
   #HepadnaDist4 <-dist.dna(Hepadna4, as.matrix = TRUE, model = "JC69")
 
   # adding random noise to distances matrices' values
-  dist1= as.vector(dna_sl_dist1) + rnorm(length(dna_sl_dist1),mean = 0,sd= 0.001)
-  dist2= as.vector(dna_sl_dist2) + rnorm(length(dna_sl_dist2),mean = 0,sd= 0.001)
 
-  #Hepadna1=abs(rnorm(HepadnaDist1[lower.tri(HepadnaDist1,diag = FALSE)], mean=HepadnaDist1[lower.tri(HepadnaDist1,diag = FALSE)], sd = 0))
-  #Hepadna4=abs(rnorm(HepadnaDist4[lower.tri(HepadnaDist4,diag = FALSE)], mean=HepadnaDist4[lower.tri(HepadnaDist4,diag = FALSE)], sd = 0))
+  dist1= as.vector(dna_sl_dist1) + rnorm(length(dna_sl_dist1),mean = 0,sd= 0.0001)
+  dist2= as.vector(dna_sl_dist2) + rnorm(length(dna_sl_dist2),mean = 0,sd= 0.0001)
+
 
 
   # pairwise nucleotide distance comparison plot
-  dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+stat_bin2d(binwidth = 0.003)+
+
+  dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+stat_bin2d(binwidth = 0.002)+
     scale_fill_gradientn(colours=c("blue","red"))+ theme(legend.justification=c(1,0), legend.position=c(1,0))+
     xlab(paste(toString(st1),toString(e1),sep=":"))+ylab(paste(toString(st2),toString(e2),sep=":"))
   #+  geom_smooth(method='lm',formula=y~x)
@@ -67,8 +69,44 @@ plot_dist_test = function(dna_object, st1,e1,st2,e2){
 
 }
 
+#' Returns dataframe with distances in between sequences in two genomic regions and pairwise distance plot
+#'
+#' @export
+get_distances = function(dna_object, st1,e1,st2,e2){
+
+  # subalignments for st1-e1 and st2-e2 regions
+  dna_sl1=dna_object[1:length(dna_object[,1]), seq(from = st1, to = e1, by=1)]
+  dna_sl2=dna_object[1:length(dna_object[,1]), seq(from = st2, to = e2, by=1)]
+
+  # distance matrices for each region
+  dna_sl_dist1 <-dist.gene(dna_sl1, method = "percentage",  pairwise.deletion = TRUE)
+  dna_sl_dist2 <-dist.gene(dna_sl2, method = "percentage",  pairwise.deletion = TRUE)
+
+  df1 = dist2list(dna_sl_dist1)
+  names(df1) <- c("Seq1", "Seq2", "Dist1")
+  df2 = dist2list(dna_sl_dist2)
+  names(df2) <- c("Seq1", "Seq2", "Dist2")
+
+  df_merged = merge(df1, df2)
+
+  # pairwise nucleotide distance comparison plot
+  dist_plot=ggplot(df_merged,aes(df_merged$Dist1,df_merged$Dist2))+stat_bin2d(binwidth = 0.002)+
+    scale_fill_gradientn(colours=c("blue","red"))+ theme(legend.justification=c(1,0), legend.position=c(1,0))+
+    xlab(paste(toString(st1),toString(e1),sep=":"))+ylab(paste(toString(st2),toString(e2),sep=":"))
+  #+  geom_smooth(method='lm',formula=y~x)
+
+  return(list(dist_plot, df_merged))
+
+}
+
+
+
+
+
+
 #' Prints names of sequences pairs which pairwise nucleotide distances lay between
 #' val11-val12 in genomic region 1 and val21-val22 in genomic region 2/
+#'
 #' distM1 - distance matrix built for region 1
 #' distM2 - distance matrix built for region 2
 #' Prints strings "name1   name2   distance_in_region1   distance_in_region2"
@@ -121,7 +159,8 @@ find_dist_slice<-function(distM, val1, val2){
   return(b)
 }
 
-#'plots pairwise distance comparison plots for different pairs of regions
+#'Plots pairwise distance comparison plots for different pairs of regions
+#'
 #'dna_object - list of DNA sequences (class DNAbin)
 #'step - step for dna regions/ window for regions is equal to step
 #'method - method of calculation distances ("pdist", "JC", "Kimura", "TN")
