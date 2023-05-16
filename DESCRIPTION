@@ -6,13 +6,11 @@ Author: vakulenko Y.A.
 Maintainer: The package maintainer <vjulia94@gmail.com>
 Description: More about what it does (maybe more than one line)
 Depends:
-        spider,
         ape,
         seqinr,
         gridExtra,
         grid,
         ggplot2,
-        sjstats,
         gplots,
         colorRamps,
         spaa
