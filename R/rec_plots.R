@@ -23,7 +23,7 @@ plot_control = function(dna_object){
   dist2= as.vector(dna_sl_dist2) + rnorm(length(dna_sl_dist2),mean = 0,sd= 0.0001)
 
   # pairwise nucleotide distance comparison plot
-  dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+ stat_bin2d()+#stat_bin2d(binwidth = 0.003)+
+  dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+ stat_bin2d(binwidth = 0.003)+
     scale_fill_gradientn(colours=c("blue","red"))+ theme(legend.justification=c(1,0), legend.position=c(1,0))+
     xlab("odd sites")+ylab("even sites")
   #+  geom_smooth(method='lm',formula=y~x)

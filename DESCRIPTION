@@ -6,13 +6,11 @@ Author: Vakulenko Y.A.
 Maintainer: The package maintainer <vjulia94@gmail.com>
 Description: RecDplot provides functions to study recombination in genetic sequences. 
 Depends:
-        spider,
         ape,
         seqinr,
         gridExtra,
         grid,
         ggplot2,
-        sjstats,
         gplots,
         colorRamps,
         spaa
