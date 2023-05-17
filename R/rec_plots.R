@@ -38,6 +38,8 @@ plot_control = function(dna_object){
 #' the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
 #' Returns list with ggplot, matrices of distances between pairs of seqences calculated for
 #' st1-e1 and st2-e2 regions
+#' @param dna_object,st1,e1,st2,e2
+#' @return list with ggplot object with PDC plot for two regions, distance matrices for region 1 and 2
 #' @export
 plot_dist_test = function(dna_object, st1,e1,st2,e2){
 
@@ -69,8 +71,10 @@ plot_dist_test = function(dna_object, st1,e1,st2,e2){
 
 }
 
-#' Returns dataframe with distances in between sequences in two genomic regions and pairwise distance plot
+#' Returns dataframe with distances between sequences in two genomic regions and pairwise distance plot
 #'
+#' @param dna_object,st1,e1,st2,e2
+#' @return list with ggplot object with PDC plot for two regions, dataframe with distances between sequences in two genomic regions
 #' @export
 get_distances = function(dna_object, st1,e1,st2,e2){
 
@@ -110,6 +114,9 @@ get_distances = function(dna_object, st1,e1,st2,e2){
 #' distM1 - distance matrix built for region 1
 #' distM2 - distance matrix built for region 2
 #' Prints strings "name1   name2   distance_in_region1   distance_in_region2"
+#' @param distM1,val11,val12,distM2,val21,val22
+#' @return dataframe with the following columns: "name1   name2   distance_in_region1   distance_in_region2"
+
 
 find_recomb_names <- function(distM1, val11, val12, distM2, val21, val22){
 

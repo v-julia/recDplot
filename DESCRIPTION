@@ -4,7 +4,7 @@ Title: Visualisation of recombination events in nucleotide sequences using pairw
 Version: 0.1.0
 Author: Vakulenko Y.A.
 Maintainer: The package maintainer <vjulia94@gmail.com>
-Description: More about what it does (maybe more than one line)
+Description: RecDplot provides functions to study recombination in genetic sequences. 
 Depends:
         spider,
         ape,
@@ -16,10 +16,10 @@ Depends:
         gplots,
         colorRamps,
         spaa
-License: What license is it under?
+License: No
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Suggests: 
     knitr,
     rmarkdown
