@@ -71,6 +71,59 @@ plot_dist_test = function(dna_object, st1,e1,st2,e2){
 
 }
 
+#' Function plots pairwise nucleotide distance comparison plot with control.
+#'
+#' Each dot corresponds to a pair of nucleotide distances between
+#' the same pair of genomes in two genomic regions - st1-e1 and st2-e2 (see axis).
+#' Returns list with ggplot, matrices of distances between pairs of seqences calculated for
+#' st1-e1 and st2-e2 regions
+#' @param dna_object,st1,e1,st2,e2
+#' @return list with ggplot object with PDC and control plot for two regions, distance matrices for region 1 and 2
+#' @export
+plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
+
+  # subalignments for odd and even sites
+  al_odd=dna_object[1:length(dna_object[,1]), seq(from = 1, to = length(dna_object[1,]), by=2)]
+  al_even=dna_object[1:length(dna_object[,1]), seq(from = 2, to = length(dna_object[1,]), by=2)]
+
+  # distance matrices for each region
+  dna_sl_dist1_odd <-dist.gene(al_odd, method = "percentage",  pairwise.deletion = TRUE)
+  dna_sl_dist2_even <-dist.gene(al_even, method = "percentage",  pairwise.deletion = TRUE)
+
+  # adding random noise to distances matrices' values
+  dist1_odd = as.vector(dna_sl_dist1_odd) + rnorm(length(dna_sl_dist1_odd),mean = 0,sd= 0.0001)
+  dist2_even = as.vector(dna_sl_dist2_even) + rnorm(length(dna_sl_dist2_even),mean = 0,sd= 0.0001)
+
+  dna_sl1=dna_object[1:length(dna_object[,1]), seq(from = st1, to = e1, by=1)]
+  dna_sl2=dna_object[1:length(dna_object[,1]), seq(from = st2, to = e2, by=1)]
+
+  # distance matrices for each region
+  dna_sl_dist1 <-dist.gene(dna_sl1, method = "percentage",  pairwise.deletion = TRUE)
+  dna_sl_dist2 <-dist.gene(dna_sl2, method = "percentage",  pairwise.deletion = TRUE)
+
+
+  # adding random noise to distances matrices' values
+
+  dist1= as.vector(dna_sl_dist1) + rnorm(length(dna_sl_dist1),mean = 0,sd= 0.0001)
+  dist2= as.vector(dna_sl_dist2) + rnorm(length(dna_sl_dist2),mean = 0,sd= 0.0001)
+
+
+
+  df1 = data.frame(dist1, dist2, factor="real")
+  colnames(df1) = c('dist1', 'dist2')
+  df2 =  data.frame(dist1_odd, dist2_even, factor="control")
+  colnames(df2) = c('dist1', 'dist2')
+  df = rbind(df1, df2)
+  colnames(df) = c('dist1', 'dist2', 'cond')
+
+  PDCP = ggplot(data = df, aes(dist1, dist2)) +  geom_point(aes(color=cond)) +  scale_color_manual(values = c("dimgrey", "dodgerblue4"))+
+    theme(legend.justification=c(1,0), legend.position=c(1,0)) +
+    xlab(paste(toString(st1),toString(e1),sep=":"))+ylab(paste(toString(st2),toString(e2),sep=":"))+
+    guides(color = guide_legend(title = ""))
+
+  return(list(PDCP, df))
+}
+
 #' Returns dataframe with distances between sequences in two genomic regions and pairwise distance plot
 #'
 #' @param dna_object,st1,e1,st2,e2

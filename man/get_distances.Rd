@@ -2,10 +2,13 @@
 % Please edit documentation in R/rec_plots.R
 \name{get_distances}
 \alias{get_distances}
-\title{Returns dataframe with distances in between sequences in two genomic regions and pairwise distance plot}
+\title{Returns dataframe with distances between sequences in two genomic regions and pairwise distance plot}
 \usage{
 get_distances(dna_object, st1, e1, st2, e2)
 }
+\value{
+list with ggplot object with PDC plot for two regions, dataframe with distances between sequences in two genomic regions
+}
 \description{
-Returns dataframe with distances in between sequences in two genomic regions and pairwise distance plot
+Returns dataframe with distances between sequences in two genomic regions and pairwise distance plot
 }

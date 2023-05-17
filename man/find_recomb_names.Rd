@@ -7,6 +7,9 @@ val11-val12 in genomic region 1 and val21-val22 in genomic region 2/}
 \usage{
 find_recomb_names(distM1, val11, val12, distM2, val21, val22)
 }
+\value{
+dataframe with the following columns: "name1   name2   distance_in_region1   distance_in_region2"
+}
 \description{
 distM1 - distance matrix built for region 1
 distM2 - distance matrix built for region 2
