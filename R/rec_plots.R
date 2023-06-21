@@ -82,9 +82,12 @@ plot_dist_test = function(dna_object, st1,e1,st2,e2){
 #' @export
 plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
 
+  # join alignment slices for control plot
+  aln_control = cbind(dna_object[,st1:e1], dna_object[,st2:e2])
+
   # subalignments for odd and even sites
-  al_odd=dna_object[1:length(dna_object[,1]), seq(from = 1, to = length(dna_object[1,]), by=2)]
-  al_even=dna_object[1:length(dna_object[,1]), seq(from = 2, to = length(dna_object[1,]), by=2)]
+  al_odd=aln_control[1:length(aln_control[,1]), seq(from = 1, to = length(aln_control[1,]), by=2)]
+  al_even=aln_control[1:length(aln_control[,1]), seq(from = 2, to = length(aln_control[1,]), by=2)]
 
   # distance matrices for each region
   dna_sl_dist1_odd <-dist.gene(al_odd, method = "percentage",  pairwise.deletion = TRUE)
@@ -93,6 +96,8 @@ plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
   # adding random noise to distances matrices' values
   dist1_odd = as.vector(dna_sl_dist1_odd) + rnorm(length(dna_sl_dist1_odd),mean = 0,sd= 0.0001)
   dist2_even = as.vector(dna_sl_dist2_even) + rnorm(length(dna_sl_dist2_even),mean = 0,sd= 0.0001)
+
+  # alignment slices
 
   dna_sl1=dna_object[1:length(dna_object[,1]), seq(from = st1, to = e1, by=1)]
   dna_sl2=dna_object[1:length(dna_object[,1]), seq(from = st2, to = e2, by=1)]
