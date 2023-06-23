@@ -2,13 +2,30 @@
 % Please edit documentation in R/rec_plots.R
 \name{find_recomb_names}
 \alias{find_recomb_names}
-\title{Prints names of sequences pairs which pairwise nucleotide distances lay between
-val11-val12 in genomic region 1 and val21-val22 in genomic region 2/}
+\title{Find sequence pairs which pairwise genetic distances follow the condition
+Returns dataframe with names of sequences pairs which pairwise nucleotide distances lay between values
+`val11-val12` in genomic region 1 and values `val21-val22` in genomic region 2.}
 \usage{
 find_recomb_names(distM1, val11, val12, distM2, val21, val22)
 }
+\arguments{
+\item{distM1}{matrix with pairwise nucleotide distances between sequences in genome region 1}
+
+\item{val11}{the lowest value in distance interval in region 1}
+
+\item{val12}{the highest value in distance interval in region 1}
+
+\item{distM2}{matrix with pairwise nucleotide distances between sequences in genome region 2}
+
+\item{val21}{the lowest value in distance interval in region 2}
+
+\item{val22}{the highest value in distance interval in region 2}
+}
+\value{
+dataframe with the following columns: "name1   name2   distance_in_region1   distance_in_region2"
+}
 \description{
-distM1 - distance matrix built for region 1
-distM2 - distance matrix built for region 2
-Prints strings "name1   name2   distance_in_region1   distance_in_region2"
+Find sequence pairs which pairwise genetic distances follow the condition
+Returns dataframe with names of sequences pairs which pairwise nucleotide distances lay between values
+`val11-val12` in genomic region 1 and values `val21-val22` in genomic region 2.
 }
