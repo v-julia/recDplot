@@ -12,8 +12,8 @@ Depends:
         grid,
         ggplot2,
         gplots,
-        colorRamps,
-        spaa
+        spaa,
+        sjstats
 License: No
 Encoding: UTF-8
 LazyData: true

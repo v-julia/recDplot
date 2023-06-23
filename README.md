@@ -42,7 +42,18 @@ library(devtools)
 install_github("v-julia/recDplot")
 ```
 
+## Requirements
+
+`recDplot` was tested with R-4.1.3 version.
+
 ## Usage
+
+
+
+
+## Web version
+
+`recDplot` functions are also available in shiny app  http://v-julia.shinyapps.io/recdplot_app.
 
 ## Contact
 Your comments, bug reports, and suggestions are very welcomed. You can leave your comment via email: vjulia94@gmail.com
