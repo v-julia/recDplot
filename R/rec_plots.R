@@ -31,7 +31,7 @@ plot_PDCP = function(dna_object, st1,e1,st2,e2){
 
 
 
-  # pairwise nucleotide distance comparison plot
+  # pairwise nucleotide distance correpondence plot
 
   dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+stat_bin2d(binwidth = 0.002)+
     scale_fill_gradientn(colours=c("blue","red"))+ theme(legend.justification=c(1,0), legend.position=c(1,0))+
@@ -42,12 +42,10 @@ plot_PDCP = function(dna_object, st1,e1,st2,e2){
 
 }
 
+
 #' Control for Pairwise nucleotide Distance Correspondence Plot
 #'
-#' Each dot corresponds to a pair of nucleotide distances between
-#' the same pair of genomes in two genomic regions - with alignment positions `st1-e1` and `st2-e2` (see axis).
-#' Returns list with ggplot, matrices of distances between pairs of sequences calculated for
-#' `st1-e1` and `st2-e2` regions
+#' Plots control for PDC plot.  Control plot visualizes the correspondence of p-distances in subalignments with odd and even positions of original alignment.
 #' @param dna_object list of DNA sequences produced by `read.dna` function of `ape` package (`as.character = TRUE` mode)
 #' @param st1 start position of genome region 1
 #' @param e1 end position of genome region 1
@@ -58,6 +56,49 @@ plot_PDCP = function(dna_object, st1,e1,st2,e2){
 #' @import ape
 #' @import ggplot2
 plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
+
+  # join alignment slices for control plot
+  aln_control = cbind(dna_object[,st1:e1], dna_object[,st2:e2])
+
+  # subalignments for odd and even sites
+  al_odd=aln_control[1:length(aln_control[,1]), seq(from = 1, to = length(aln_control[1,]), by=2)]
+  al_even=aln_control[1:length(aln_control[,1]), seq(from = 2, to = length(aln_control[1,]), by=2)]
+
+  # distance matrices for each region
+  dna_sl_dist1_odd <-dist.gene(al_odd, method = "percentage",  pairwise.deletion = TRUE)
+  dna_sl_dist2_even <-dist.gene(al_even, method = "percentage",  pairwise.deletion = TRUE)
+
+  # adding random noise to distances matrices' values
+  dist1_odd = as.vector(dna_sl_dist1_odd) + rnorm(length(dna_sl_dist1_odd),mean = 0,sd= 0.0001)
+  dist2_even = as.vector(dna_sl_dist2_even) + rnorm(length(dna_sl_dist2_even),mean = 0,sd= 0.0001)
+
+  dist_plot=ggplot(data.frame(dist1_odd,dist2_even),aes(dist1_odd,dist2_even))+stat_bin2d(binwidth = 0.002)+
+    scale_fill_gradientn(colours=c("blue","red"))+ theme(legend.justification=c(1,0), legend.position=c(1,0))+
+    xlab(paste(toString(st1),toString(e1),sep=":"))+ylab(paste(toString(st2),toString(e2),sep=":"))
+  #+  geom_smooth(method='lm',formula=y~x)
+
+  return(list(dist_plot, dna_sl_dist1_odd, dna_sl_dist2_even))
+
+}
+
+
+
+
+#' Pairwise nucleotide Distance Correspondence Plot with control
+#'
+#' This function plots PDC plot and its control on the same figure. Each dot corresponds to a pair of nucleotide distances between
+#' the same pair of genomes in two genomic regions - with alignment positions `st1-e1` and `st2-e2` (see axis).
+#' Returns list with ggplot and dataframe with pairwise distances calculated for `st1-e1` and `st2-e2` regions
+#' @param dna_object list of DNA sequences produced by `read.dna` function of `ape` package (`as.character = TRUE` mode)
+#' @param st1 start position of genome region 1
+#' @param e1 end position of genome region 1
+#' @param st2 start position of genome region 2
+#' @param e2 end position of genome region 2
+#' @return list with ggplot object with PDC and control plot for two regions, distance matrices for region 1 and 2
+#' @export
+#' @import ape
+#' @import ggplot2
+plot_PDCP_with_control = function(dna_object, st1,e1,st2,e2){
 
   # join alignment slices for control plot
   aln_control = cbind(dna_object[,st1:e1], dna_object[,st2:e2])
