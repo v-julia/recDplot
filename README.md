@@ -44,11 +44,42 @@ install_github("v-julia/recDplot")
 
 ## Requirements
 
-`recDplot` was tested with R-4.1.3 version.
+`recDplot` was tested with R-3.4.3 and R-4.1.3 version.
 
 ## Usage
 
+Building PDD matrix:
 
+```R
+library(recDplot)
+library(colorRamps)
+library(gplots)
+
+aln = read.dna('path_to_alignment', format="fasta", as.character=TRUE)
+aln[aln=='-'] <- NA
+
+PDD_matrix = calc_PDDmatrix(dna_object=aln, step=50, window=600, method="pdist", modification="pairwise") #calculate PDD matrix
+heatmap.2(as.matrix(PDD_matrix), Rowv = FALSE, Colv = "Rowv", dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA) # visualize PDD matrix as a heatmap
+```
+
+Building PDC plot and its control
+
+```R
+aln = read.dna('path_to_alignment', format="fasta", as.character=TRUE)
+aln[aln=='-'] <- NA
+
+list_control <-  plot_PDCP_control(aln, 1, 500, 501, 1000)
+list_control[1] # ggplot with PDC control
+
+
+list_PDC <-  plot_PDCP(aln, 1, 500, 501, 1000)
+list_PDC[1] # ggplot with PDC plot
+
+list_PDCP_with_control <-  plot_PDCP_with_control(mav, 1, 500, 501, 1000)
+list_PDCP_with_control[1] # ggplot with PDC and control in one figure
+
+
+```
 
 
 ## Web version
