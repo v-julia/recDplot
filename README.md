@@ -31,7 +31,7 @@ If there are recombinant viruses in the dataset, the pairwise genetic distances 
 To assess the degree of correspondence between genetic distances in different genome regions, PDC plots can be further summarized as pairwise distance deviation matrices (PDD matrices). To build such matrix, the alignment of genomes is divided into windows, then for each window pairwise genetic distances are built. For each pair of regions we estimate the root mean square error of linear regression and visualize it as a heatmap. The higher RMSE, the more pairwise genetic distances deviate from regression line, that might be the consequence of recombination.
 
 
-<img src="https://github.com/v-julia/recDplot/blob/master/images/PDD_matrix.jpg" align="center" width=300/>
+<img src="https://github.com/v-julia/recDplot/blob/master/images/PDD_matrix.jpg" align="center" width=600/>
 
 ## Installation
 
