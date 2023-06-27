@@ -12,7 +12,7 @@
 
 ## Introduction
 
-`recDplot` provides two approaches for recombination analysis - pairwise distance corresponce plots (PDC plots) and pairwise distance deviation matrices (PDD matrices).  
+`recDplot` provides two approaches for recombination analysis - pairwise distance correspondence plots (PDC plots) and pairwise distance deviation matrices (PDD matrices).  
 
 ### PDC plots
 
@@ -75,7 +75,7 @@ list_control[1] # ggplot with PDC control
 list_PDC <-  plot_PDCP(aln, 1, 500, 501, 1000)
 list_PDC[1] # ggplot with PDC plot
 
-list_PDCP_with_control <-  plot_PDCP_with_control(mav, 1, 500, 501, 1000)
+list_PDCP_with_control <-  plot_PDCP_with_control(aln, 1, 500, 501, 1000)
 list_PDCP_with_control[1] # ggplot with PDC and control in one figure
 
 
