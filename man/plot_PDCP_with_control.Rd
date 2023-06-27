@@ -18,7 +18,7 @@ plot_PDCP_with_control(dna_object, st1, e1, st2, e2)
 \item{e2}{end position of genome region 2}
 }
 \value{
-list with ggplot object with PDC and control plot for two regions, distance matrices for region 1 and 2
+list with ggplot object with PDC and control plot for two regions, dataframe with distances in two regions of alignment and in concatenated odd and even positions of alignment
 }
 \description{
 This function plots PDC plot and its control on the same figure. Each dot corresponds to a pair of nucleotide distances between

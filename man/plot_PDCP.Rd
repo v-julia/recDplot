@@ -18,7 +18,7 @@ plot_PDCP(dna_object, st1, e1, st2, e2)
 \item{e2}{end position of genome region 2}
 }
 \value{
-list with ggplot object with PDC plot for two regions, distance matrices for region 1 and 2
+list with ggplot object with PDC plot for two regions, dataframe with distances in region 1 and region 2
 }
 \description{
 Each dot corresponds to a pair of nucleotide distances between

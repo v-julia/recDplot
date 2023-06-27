@@ -1,0 +1,46 @@
+---
+title: "Introduction to recDplot"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{recDplot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# RecDplot - R package for visualizing recombination in viral sequences.
+
+`RecDplot` package  provides two approaches to explore the recombination in viral sequences - pairwise distance correspondence plots (PDC plots) and pairwise distance deviation matrices (PDD matrices).
+
+
+The purpose of this vignette is to show the examples of its usage.
+
+
+First, we’ll attach the packages we use and load the sequence alignment.
+```{r setup}
+library(recDplot)
+library(colorRamps)
+library(ape)
+
+alignment = read.dna(paste(path_al, 'MAV/', mav_name, sep=""), format="fasta", as.character=TRUE)
+alignment[alignment=='-'] <- NA
+```
+
+
+## Pairwise Distance Deviation (PDD) matrices 
+
+To assess the degree of correspondence between genetic distances in different genome regions, PDC plots can be further summarized as pairwise distance deviation matrices (PDD matrices). To build such matrix, the alignment of genomes is divided into windows, then for each window pairwise genetic distances are built. For each pair of regions we estimate the root mean square error of linear regression and visualize it as a heatmap. The higher RMSE, the more pairwise genetic distances deviate from regression line, that might be the consequence of recombination.
+
+```{r}
+PDD_matrix = calc_PDDmatrix(dna_object=alignment, step=50, window=600, method="pdist", modification="pairwise") #calculate PDD matrix
+heatmap.2(as.matrix(PDD_matrix), Rowv = FALSE, Colv = "Rowv", dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA) # visualize PDD matrix as a heatmap
+```
+
+
+## Pairwise Distance Corresponce (PDC) plots
