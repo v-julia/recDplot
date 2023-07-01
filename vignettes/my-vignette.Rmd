@@ -2,7 +2,7 @@
 title: "Introduction to recDplot"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{recDplot}
+  %\VignetteIndexEntry{Introduction to recDplot}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,25 +22,64 @@ knitr::opts_chunk$set(
 The purpose of this vignette is to show the examples of its usage.
 
 
-First, we’ll attach the packages we use and load the sequence alignment.
+First, we’ll attach the packages we use and load the sequence alignment. Here we load the aligned concatenated ORFs of noroviruses.
 ```{r setup}
 library(recDplot)
 library(colorRamps)
+library(gplots)
+library(plotly)
 library(ape)
 
-alignment = read.dna(paste(path_al, 'MAV/', mav_name, sep=""), format="fasta", as.character=TRUE)
+alignment = read.dna("norovirus_example.fasta", format="fasta", as.character=TRUE)
 alignment[alignment=='-'] <- NA
 ```
 
 
 ## Pairwise Distance Deviation (PDD) matrices 
 
-To assess the degree of correspondence between genetic distances in different genome regions, PDC plots can be further summarized as pairwise distance deviation matrices (PDD matrices). To build such matrix, the alignment of genomes is divided into windows, then for each window pairwise genetic distances are built. For each pair of regions we estimate the root mean square error of linear regression and visualize it as a heatmap. The higher RMSE, the more pairwise genetic distances deviate from regression line, that might be the consequence of recombination.
+To assess the degree of correspondence between genetic distances in different genome regions, PDC plots can be further summarized as pairwise distance deviation matrices (PDD matrices). To build such matrix, the alignment of genomes is divided into windows, then for each window pairwise genetic distances are built. For each pair of regions we estimate the root mean square error of linear regression and visualize it as a heat map. The higher RMSE in matrix, the more pairwise genetic distances deviate from regression line, that might be the consequence of recombination.
+
+Let's calculate PDD matrix for our alignment of norovirus sequences.
 
 ```{r}
 PDD_matrix = calc_PDDmatrix(dna_object=alignment, step=50, window=600, method="pdist", modification="pairwise") #calculate PDD matrix
+dev.off()
 heatmap.2(as.matrix(PDD_matrix), Rowv = FALSE, Colv = "Rowv", dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA) # visualize PDD matrix as a heatmap
+
 ```
 
 
 ## Pairwise Distance Corresponce (PDC) plots
+
+To check the correspondence between genetic distances in specific genome regions we can build Pairwise Distance Correspondence plots. 
+
+```{r}
+list_PDC <-  plot_PDCP(alignment, 1, 1000, 6000, 7000)
+list_PDC[[1]] # ggplot with PDC plot
+head(list_PDC[[2]], n=5) # dataframe with distances between sequences in two regions
+```
+To explore which sequence pairs distances deviate from regression line, we suggest to use 'plotly' package.
+```{r}
+plot_ly(list_PDC[[2]],type="scatter", x = ~value.x,
+        y = ~value.y, colors = "Set1", text = ~paste(row, '\n', col))%>%
+  layout(xaxis = list(title = '1-1000'),
+         yaxis = list(title = '6000-7000'), legend = list(title=list(text='Interactive PDC plot')))
+```
+
+
+
+```{r}
+list_control <-  plot_PDCP_control(alignment, 1, 1000, 6000, 7000)
+list_control[[1]] #  PDC control
+head(list_control[[2]], n=5)
+```
+
+
+
+```{r}
+list_PDCP_with_control <-  plot_PDCP_with_control(alignment, 1, 1000, 6000, 7000)
+list_PDCP_with_control[[1]] # ggplot with PDC and control in one figure
+head(list_PDCP_with_control[[2]])
+```
+
+

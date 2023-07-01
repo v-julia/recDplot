@@ -34,6 +34,11 @@ dist_to_df = function(dist1, dist2){
 #' @export
 #' @import ape
 #' @import ggplot2
+#' @examples
+#' \dontrun{
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' plot_PDCP(alignment, 1, 500, 600, 1000)}
 plot_PDCP = function(dna_object, st1,e1,st2,e2){
 
   # subalignments for st1-e1 and st2-e2 regions
@@ -77,6 +82,11 @@ plot_PDCP = function(dna_object, st1,e1,st2,e2){
 #' @export
 #' @import ape
 #' @import ggplot2
+#' @examples
+#' \dontrun{
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' plot_PDCP_control(alignment, 1, 500, 600, 1000)}
 plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
 
   # join alignment slices for control plot
@@ -122,6 +132,11 @@ plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
 #' @export
 #' @import ape
 #' @import ggplot2
+#' @examples
+#' \dontrun{
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' plot_PDCP_with_control(alignment, 1, 500, 600, 1000)}
 plot_PDCP_with_control = function(dna_object, st1,e1,st2,e2){
 
   # join alignment slices for control plot
@@ -309,7 +324,7 @@ plot_dist = function(dna_object, step, method, fig_dir, name_fig){
   }
 }
 
-#' Pairwise Distance Deviation Matrix
+#' Calculate Pairwise Distance Deviation Matrix
 #'
 #' Returns pairwise distance deviation matrix. To build such matrix, the sliding window is moved along the alignment, and for each window the pairwise genetic distances between sequences are calculated. Then for each pair of windows the linear regression for pairwise genetic distances is built and the root mean square error of linear regression is estimated.
 #' @param dna_object list of DNA sequences produced by `read.dna` function of `ape` package (`as.character = TRUE` mode)
@@ -317,9 +332,19 @@ plot_dist = function(dna_object, step, method, fig_dir, name_fig){
 #' @param step  step size for sliding process
 #' @param method method of calculation distances ("pdist", "JC", "Kimura", "TN")
 #' @param modification pairwise deletion of positions with gaps (`modification='pairwise'`) or not (`modification='NA'`)
+#' @return matrix
 #' @export
 #' @import ape
 #' @import sjstats
+#' @examples
+#' \dontrun{
+#' library(colorRamps)
+#' library(gplots)
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' pddmatrix = calc_PDDmatrix(alignment, 1, 500, 600, 1000)
+#' heatmap.2(as.matrix(pddmatrix), Rowv = FALSE, Colv = "Rowv",
+#' dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA)}
 calc_PDDmatrix = function(dna_object, step, window, method, modification=NA){
 
   length_aln = length(dna_object[1,]) #length of alignment

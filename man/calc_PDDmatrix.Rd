@@ -2,12 +2,12 @@
 % Please edit documentation in R/rec_plots.R
 \name{calc_PDDmatrix}
 \alias{calc_PDDmatrix}
-\title{Pairwise Distance Deviation Matrix}
+\title{Calculate Pairwise Distance Deviation Matrix}
 \usage{
 calc_PDDmatrix(dna_object, step, window, method, modification = NA)
 }
 \arguments{
-\item{dna_object}{list of DNA sequences produced by `read.dna` function of `ape` package (`as.character = TRUE` mode)}
+\item{dna_object}{list of DNA sequences produced by \code{read.dna} function of \code{ape} package (\code{as.character = TRUE} mode)}
 
 \item{step}{step size for sliding process}
 
@@ -15,8 +15,20 @@ calc_PDDmatrix(dna_object, step, window, method, modification = NA)
 
 \item{method}{method of calculation distances ("pdist", "JC", "Kimura", "TN")}
 
-\item{modification}{pairwise deletion of positions with gaps (`modification='pairwise'`) or not (`modification='NA'`)}
+\item{modification}{pairwise deletion of positions with gaps (\code{modification='pairwise'}) or not (\code{modification='NA'})}
+}
+\value{
+matrix
 }
 \description{
 Returns pairwise distance deviation matrix. To build such matrix, the sliding window is moved along the alignment, and for each window the pairwise genetic distances between sequences are calculated. Then for each pair of windows the linear regression for pairwise genetic distances is built and the root mean square error of linear regression is estimated.
+}
+\examples{
+\dontrun{
+library(colorRamps)
+library(gplots)
+alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+alignment[alignment=='-'] <- NA
+pddmatrix = calc_PDDmatrix(alignment, 1, 500, 600, 1000)
+heatmap.2(as.matrix(pddmatrix), Rowv = FALSE, Colv = "Rowv", dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA)}
 }
