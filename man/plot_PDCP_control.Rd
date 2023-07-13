@@ -7,7 +7,7 @@
 plot_PDCP_control(dna_object, st1, e1, st2, e2)
 }
 \arguments{
-\item{dna_object}{list of DNA sequences produced by `read.dna` function of `ape` package (`as.character = TRUE` mode)}
+\item{dna_object}{list of DNA sequences produced by \code{read.dna} function of \code{ape} package (\code{as.character = TRUE} mode)}
 
 \item{st1}{start position of genome region 1}
 
@@ -18,8 +18,14 @@ plot_PDCP_control(dna_object, st1, e1, st2, e2)
 \item{e2}{end position of genome region 2}
 }
 \value{
-list with ggplot object with PDC and control plot for two regions, distance matrices for region 1 and 2
+list with ggplot object with control plot for two regions, dataframe with distances in concatenated odd and even positions of alignment
 }
 \description{
 Plots control for PDC plot.  Control plot visualizes the correspondence of p-distances in subalignments with odd and even positions of original alignment.
+}
+\examples{
+\dontrun{
+alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+alignment[alignment=='-'] <- NA
+plot_PDCP_control(alignment, 1, 500, 600, 1000)}
 }

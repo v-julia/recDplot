@@ -7,7 +7,7 @@
 plot_PDCP(dna_object, st1, e1, st2, e2)
 }
 \arguments{
-\item{dna_object}{list of DNA sequences produced by `read.dna` function of `ape` package (`as.character = TRUE` mode)}
+\item{dna_object}{list of DNA sequences produced by \code{read.dna} function of \code{ape} package (\code{as.character = TRUE} mode)}
 
 \item{st1}{start position of genome region 1}
 
@@ -18,11 +18,17 @@ plot_PDCP(dna_object, st1, e1, st2, e2)
 \item{e2}{end position of genome region 2}
 }
 \value{
-list with ggplot object with PDC plot for two regions, distance matrices for region 1 and 2
+list with ggplot object with PDC plot for two regions, dataframe with distances in region 1 and region 2
 }
 \description{
 Each dot corresponds to a pair of nucleotide distances between
-the same pair of genomes in two genomic regions with alignment positions `st1-e1` and `st2-e2` (see axis).
+the same pair of genomes in two genomic regions with alignment positions \code{st1-e1} and \code{st2-e2} (see axis).
 Returns list with ggplot, matrices of distances between pairs of sequences calculated for
-`st1-e1` and `st2-e2` regions
+\code{st1-e1} and \code{st2-e2} regions
+}
+\examples{
+\dontrun{
+alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+alignment[alignment=='-'] <- NA
+plot_PDCP(alignment, 1, 500, 600, 1000)}
 }

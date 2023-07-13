@@ -1,3 +1,24 @@
+#' Create dataframe from two dist objects
+
+#' Created dataframe from distance matrices calculated for different regions of sequence alignment
+#' @param dist1 distance matrix for region1 in sequence alignment, object of class `dist`
+#' @param dist2 distance matrix for region2 in sequence alignment, object of class `dist`
+#' @return dataframe with columns "row, col, value.x, value.y" - where row and col contain sequence names, x.value contains distances in region1, y.value contains distances in region2.
+#' @import spaa
+#' @noRd
+dist_to_df = function(dist1, dist2){
+  #convert dist object to dataframe
+  d1 = dist2list(dist1)
+  d2 = dist2list(dist2)
+
+  d = merge(d1, d2, by=c("row", "col"))
+
+
+  return(d)
+}
+
+
+
 #' Pairwise nucleotide Distance Correspondence Plot
 #'
 #' Each dot corresponds to a pair of nucleotide distances between
@@ -9,10 +30,15 @@
 #' @param e1 end position of genome region 1
 #' @param st2 start position of genome region 2
 #' @param e2 end position of genome region 2
-#' @return list with ggplot object with PDC plot for two regions, distance matrices for region 1 and 2
+#' @return list with ggplot object with PDC plot for two regions, dataframe with distances in region 1 and region 2
 #' @export
 #' @import ape
 #' @import ggplot2
+#' @examples
+#' \dontrun{
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' plot_PDCP(alignment, 1, 500, 600, 1000)}
 plot_PDCP = function(dna_object, st1,e1,st2,e2){
 
   # subalignments for st1-e1 and st2-e2 regions
@@ -30,7 +56,6 @@ plot_PDCP = function(dna_object, st1,e1,st2,e2){
   dist2= as.vector(dna_sl_dist2) + rnorm(length(dna_sl_dist2),mean = 0,sd= 0.0001)
 
 
-
   # pairwise nucleotide distance correpondence plot
 
   dist_plot=ggplot(data.frame(dist1,dist2),aes(dist1,dist2))+stat_bin2d(binwidth = 0.002)+
@@ -38,7 +63,9 @@ plot_PDCP = function(dna_object, st1,e1,st2,e2){
     xlab(paste(toString(st1),toString(e1),sep=":"))+ylab(paste(toString(st2),toString(e2),sep=":"))
   #+  geom_smooth(method='lm',formula=y~x)
 
-  return(list(dist_plot, dna_sl_dist1, dna_sl_dist2))
+  dist_df = dist_to_df(dna_sl_dist1, dna_sl_dist2)
+
+  return(list(dist_plot, dist_df))
 
 }
 
@@ -51,10 +78,15 @@ plot_PDCP = function(dna_object, st1,e1,st2,e2){
 #' @param e1 end position of genome region 1
 #' @param st2 start position of genome region 2
 #' @param e2 end position of genome region 2
-#' @return list with ggplot object with PDC and control plot for two regions, distance matrices for region 1 and 2
+#' @return list with ggplot object with control plot for two regions, dataframe with distances in concatenated odd and even positions of alignment
 #' @export
 #' @import ape
 #' @import ggplot2
+#' @examples
+#' \dontrun{
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' plot_PDCP_control(alignment, 1, 500, 600, 1000)}
 plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
 
   # join alignment slices for control plot
@@ -77,7 +109,9 @@ plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
     xlab(paste(toString(st1),toString(e1),sep=":"))+ylab(paste(toString(st2),toString(e2),sep=":"))
   #+  geom_smooth(method='lm',formula=y~x)
 
-  return(list(dist_plot, dna_sl_dist1_odd, dna_sl_dist2_even))
+  dist_df = dist_to_df(dna_sl_dist1_odd, dna_sl_dist2_even)
+
+  return(list(dist_plot, dist_df))
 
 }
 
@@ -94,10 +128,15 @@ plot_PDCP_control = function(dna_object, st1,e1,st2,e2){
 #' @param e1 end position of genome region 1
 #' @param st2 start position of genome region 2
 #' @param e2 end position of genome region 2
-#' @return list with ggplot object with PDC and control plot for two regions, distance matrices for region 1 and 2
+#' @return list with ggplot object with PDC and control plot for two regions, dataframe with distances in two regions of alignment and in concatenated odd and even positions of alignment
 #' @export
 #' @import ape
 #' @import ggplot2
+#' @examples
+#' \dontrun{
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' plot_PDCP_with_control(alignment, 1, 500, 600, 1000)}
 plot_PDCP_with_control = function(dna_object, st1,e1,st2,e2){
 
   # join alignment slices for control plot
@@ -285,7 +324,7 @@ plot_dist = function(dna_object, step, method, fig_dir, name_fig){
   }
 }
 
-#' Pairwise Distance Deviation Matrix
+#' Calculate Pairwise Distance Deviation Matrix
 #'
 #' Returns pairwise distance deviation matrix. To build such matrix, the sliding window is moved along the alignment, and for each window the pairwise genetic distances between sequences are calculated. Then for each pair of windows the linear regression for pairwise genetic distances is built and the root mean square error of linear regression is estimated.
 #' @param dna_object list of DNA sequences produced by `read.dna` function of `ape` package (`as.character = TRUE` mode)
@@ -293,9 +332,19 @@ plot_dist = function(dna_object, step, method, fig_dir, name_fig){
 #' @param step  step size for sliding process
 #' @param method method of calculation distances ("pdist", "JC", "Kimura", "TN")
 #' @param modification pairwise deletion of positions with gaps (`modification='pairwise'`) or not (`modification='NA'`)
+#' @return matrix
 #' @export
 #' @import ape
 #' @import sjstats
+#' @examples
+#' \dontrun{
+#' library(colorRamps)
+#' library(gplots)
+#' alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
+#' alignment[alignment=='-'] <- NA
+#' pddmatrix = calc_PDDmatrix(alignment, 1, 500, 600, 1000)
+#' heatmap.2(as.matrix(pddmatrix), Rowv = FALSE, Colv = "Rowv",
+#' dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA)}
 calc_PDDmatrix = function(dna_object, step, window, method, modification=NA){
 
   length_aln = length(dna_object[1,]) #length of alignment

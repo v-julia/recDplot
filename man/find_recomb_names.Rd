@@ -4,7 +4,7 @@
 \alias{find_recomb_names}
 \title{Find sequence pairs which pairwise genetic distances follow the condition
 Returns dataframe with names of sequences pairs which pairwise nucleotide distances lay between values
-`val11-val12` in genomic region 1 and values `val21-val22` in genomic region 2.}
+\code{val11-val12} in genomic region 1 and values \code{val21-val22} in genomic region 2.}
 \usage{
 find_recomb_names(distM1, val11, val12, distM2, val21, val22)
 }
@@ -27,5 +27,5 @@ dataframe with the following columns: "name1   name2   distance_in_region1   dis
 \description{
 Find sequence pairs which pairwise genetic distances follow the condition
 Returns dataframe with names of sequences pairs which pairwise nucleotide distances lay between values
-`val11-val12` in genomic region 1 and values `val21-val22` in genomic region 2.
+\code{val11-val12} in genomic region 1 and values \code{val21-val22} in genomic region 2.
 }
