@@ -54,25 +54,29 @@ heatmap.2(as.matrix(PDD_matrix), Rowv = FALSE, Colv = "Rowv", dendrogram = 'none
 To check the correspondence between genetic distances in specific genome regions we can build Pairwise Distance Correspondence plots. 
 
 ```{r}
-list_PDC <-  plot_PDCP(alignment, 1, 1000, 6000, 7000)
+list_PDC <-  plot_PDCP(alignment, 1, 1000, 5000, 6000)
 list_PDC[[1]] # ggplot with PDC plot
 head(list_PDC[[2]], n=5) # dataframe with distances between sequences in two regions
+
 ```
+
+```{r}
+list_PDC_control <-  plot_PDCP_control(alignment, 1, 1000, 5000, 6000)
+list_PDC_control[[1]] # ggplot with PDC plot
+head(list_PDC_control[[2]], n=5) # dataframe with distances between sequences in two regions
+```
+
+
+
+
 To explore which sequence pairs distances deviate from regression line, we suggest to use 'plotly' package.
 ```{r}
 plot_ly(list_PDC[[2]],type="scatter", x = ~value.x,
         y = ~value.y, colors = "Set1", text = ~paste(row, '\n', col))%>%
   layout(xaxis = list(title = '1-1000'),
-         yaxis = list(title = '6000-7000'), legend = list(title=list(text='Interactive PDC plot')))
+         yaxis = list(title = '5000-6000'), legend = list(title=list(text='Interactive PDC plot')))
 ```
 
-
-
-```{r}
-list_control <-  plot_PDCP_control(alignment, 1, 1000, 6000, 7000)
-list_control[[1]] #  PDC control
-head(list_control[[2]], n=5)
-```
 
 
 

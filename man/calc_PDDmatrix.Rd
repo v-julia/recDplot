@@ -30,5 +30,6 @@ library(gplots)
 alignment = read.dna(path/to/file, format="fasta", as.character=TRUE)
 alignment[alignment=='-'] <- NA
 pddmatrix = calc_PDDmatrix(alignment, 1, 500, 600, 1000)
-heatmap.2(as.matrix(pddmatrix), Rowv = FALSE, Colv = "Rowv", dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA)}
+heatmap.2(as.matrix(pddmatrix), Rowv = FALSE, Colv = "Rowv",
+dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA)}
 }

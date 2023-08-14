@@ -61,6 +61,10 @@ aln[aln=='-'] <- NA
 PDD_matrix = calc_PDDmatrix(dna_object=aln, step=50, window=600, method="pdist", modification="pairwise") #calculate PDD matrix
 heatmap.2(as.matrix(PDD_matrix), Rowv = FALSE, Colv = "Rowv", dendrogram = 'none', col=matlab.like, main="PDD matrix", tracecol=NA) # visualize PDD matrix as a heatmap
 ```
+<img src="https://github.com/v-julia/recDplot/blob/master/images/PDD_example.jpg" align="center" width=500/>
+
+
+
 
 Building PDC plot and its control
 
@@ -68,19 +72,59 @@ Building PDC plot and its control
 aln = read.dna('path_to_alignment', format="fasta", as.character=TRUE)
 aln[aln=='-'] <- NA
 
-list_control <-  plot_PDCP_control(aln, 1, 500, 501, 1000)
+list_control <-  plot_PDCP_control(aln, 1, 1000, 5000, 6000)
 list_control[1] # ggplot with PDC control
+```
+<img src="https://github.com/v-julia/recDplot/blob/master/images/PDC_plot_control_example.jpg" align="center" width=500/>
 
 
-list_PDC <-  plot_PDCP(aln, 1, 500, 501, 1000)
+```R
+
+head(list_control[[2]], n=5)  # table with pairwise distances between sequences in two regions in control alignment
+
+#                            row                                 col   value.x   value.y
+#1 AB039774_NA_NA_NA_GI.5_GI.P12       AB039774_NA_NA_NA_GI.5_GI.P12 0.0000000 0.0000000
+#2 AB039774_NA_NA_NA_GI.5_GI.P12  AB042808_JPN_human_1987_GI.4_GI.P4 0.2201646 0.2476780
+#3 AB039774_NA_NA_NA_GI.5_GI.P12     AB081723_JPN_NA_NA_GI.6_GI.PNA1 0.3023736 0.2898551
+#4 AB039774_NA_NA_NA_GI.5_GI.P12 AB187514_JPN_human_1979_GI.3_GI.P14 0.2876289 0.3088843
+#5 AB039774_NA_NA_NA_GI.5_GI.P12  AB435514_JPN_mouse_2005_GV.1_GV.P1 0.5139186 0.5128755
+```
+
+```R
+list_PDC <-  plot_PDCP(aln, 1, 1000, 5000, 6000)
 list_PDC[1] # ggplot with PDC plot
+```
+<img src="https://github.com/v-julia/recDplot/blob/master/images/PDC_plot_example.jpg" align="center" width=500/>
 
+```R
+head(list_PDC[[2]], n=5)  # table with pairwise distances between sequences in two regions
+#                            row                                 col   value.x   value.y
+#1 AB039774_NA_NA_NA_GI.5_GI.P12       AB039774_NA_NA_NA_GI.5_GI.P12 0.0000000 0.0000000
+#2 AB039774_NA_NA_NA_GI.5_GI.P12  AB042808_JPN_human_1987_GI.4_GI.P4 0.2372529 0.2306122
+#3 AB039774_NA_NA_NA_GI.5_GI.P12     AB081723_JPN_NA_NA_GI.6_GI.PNA1 0.3183246 0.2744898
+#4 AB039774_NA_NA_NA_GI.5_GI.P12 AB187514_JPN_human_1979_GI.3_GI.P14 0.3100937 0.2865916
+#5 AB039774_NA_NA_NA_GI.5_GI.P12  AB435514_JPN_mouse_2005_GV.1_GV.P1 0.5620112 0.4685891
+```
+
+
+To explore which sequence pairs distances deviate from regression line, we suggest to use 'plotly' package.
+```R
+plot_ly(list_PDC[[2]],type="scatter", x = ~value.x,
+        y = ~value.y, colors = "Set1", text = ~paste(row, '\n', col))%>%
+  layout(xaxis = list(title = '1-1000'),
+         yaxis = list(title = '5000-6000'), legend = list(title=list(text='Interactive PDC plot')))
+```
+<img src="https://github.com/v-julia/recDplot/blob/master/images/PDC_plot_plotly_example.jpg" align="center" width=500/>
+
+
+PDC plot and its control can be visualized on one figure
+
+```R
 list_PDCP_with_control <-  plot_PDCP_with_control(aln, 1, 500, 501, 1000)
 list_PDCP_with_control[1] # ggplot with PDC and control in one figure
 
 
 ```
-
 
 ## Web version
 
