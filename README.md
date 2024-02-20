@@ -126,7 +126,7 @@ list_PDCP_with_control[1] # ggplot with PDC and control in one figure
 
 ```
 
-## Web version
+## Web-version
 
 `recDplot` functions are also available in shiny app  http://v-julia.shinyapps.io/recdplot_app.
 
